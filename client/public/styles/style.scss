@@ -1,0 +1,172 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap');
+// font-family: 'Quicksand', sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
+// font-family: 'Inter', sans-serif;
+
+// 300 = light
+// 400 regular
+// 500 == medium
+// 600 == semi-bold
+// 700 == bold
+
+/* ====== VARIÁVEIS ====== */
+    // CORES
+        $cor-primaria-forte: #5D04D9;
+        $cor-primaria-escura_forte: #310372;
+        $cor-primaria-escura: #5C0396;
+        $cor-primaria-clara: #893FF1;
+
+        $cor-preta-forte: #1C1C1C;
+        $cor-preta-escuro: #262626;
+        $cor-preta-claro: #404040;
+
+        $cor-branca: #fff;
+
+    // TIPOGRAFIA
+
+        // headings
+
+            h1 {
+                font-family: 'Quicksand', sans-serif;
+                font-weight: 700;
+                font-size: 3.9rem;
+            }
+
+            h2 {
+                font-family: 'Quicksand', sans-serif;
+                font-weight: 600;
+                font-size: 3.4rem;
+            }
+
+            h3 {
+                font-family: 'Quicksand', sans-serif;
+                font-weight: 600;
+                font-size: 3rem;
+            }
+
+            h4 {
+                font-family: 'Quicksand', sans-serif;
+                font-weight: 500;
+                font-size: 2.8rem;
+            }
+
+            h5 {
+                font-family: 'Quicksand', sans-serif;
+                font-weight: 500;
+                font-size: 2.4rem;
+            }
+
+            h6 {
+                font-family: 'Quicksand', sans-serif;
+                font-weight: 500;
+                font-size: 2rem;
+            }
+
+        // body
+
+            p, body {
+                font-family: 'Inter', sans-serif;
+                font-weight: 500;
+                font-size: 1.9rem;
+            }
+
+            .body-small {
+                font-size: 1.6rem;
+            }
+            
+            .body-large {
+                font: 2.2rem;
+            }
+
+        // caption
+
+            span, .caption {
+                font-family: 'Inter', sans-serif;
+                font-weight: 500;
+                font-size: 1.7rem;
+            }
+
+            .caption-small {
+                font-size: 1.4rem;
+            }
+
+            .caption-large {
+                font-size: 2rem;
+            }
+
+        // button
+
+            button {
+                font-family: 'Quicksand', sans-serif;
+                font-weight: 500;
+                font-size: 1.9rem;
+            }
+
+            .button-small {
+                font-size: 1.6rem;
+            }
+
+            .button-large {
+                font-size: 2.2rem;
+            }
+
+        // link
+
+            a {
+                font-family: 'Inter', sans-serif;
+                font-weight: 400;
+                font-size: 2rem;
+            }
+
+            .link-small {
+                font-size: 1.7rem;
+            }
+
+            .link-large {
+                font-size: 2.3rem;
+            }
+
+        // label
+
+            label {
+                font-family: 'Inter', sans-serif;
+                font-weight: 300;
+                font-size: 1.6rem;
+            }
+
+            .label-small {
+                font-size: 1.3rem;
+            }
+
+            .label-large {
+                font-size: 1.9rem;
+            }
+
+/* ====== BODY/HTML/ROOT ====== */
+
+:root {
+    font-size: 65%;
+}
+
+body {
+    font-size: 1.8rem;
+}
+
+/* ====== HEADER ====== */
+
+header {
+
+}
+
+/* ====== MAIN ====== */
+
+main {
+
+}
+
+/* ====== FOOTER ====== */
+
+footer {
+
+}
