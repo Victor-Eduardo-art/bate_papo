@@ -1,24 +1,50 @@
 import React from "react";
 import { Routes, Route, Link } from 'react-router-dom'
-import Index from './components/Index'
-import Adm from './components/Adm'
+import Home from './components/Home'
+import SignIn from './components/SignIn'
+import SignUp from './components/SignUp'
+import { io } from 'socket.io-client'
+const socket = io("http://localhost:7070")
+const hostClient = 'http://localhost:3000'
 
 export default function App () {
+	const f_logoff = () => {
+		localStorage.clear()
+		window.location.href = '/signup'
+	}
+
+	const f_returnLinks = () => {
+		if (window.location.href === `${hostClient}/signin` || window.location.href === `${hostClient}/signup`) {
+			return (
+				<>
+					<Link to='/signin'>Sign-in</Link>
+					<Link to='/signup'>Sign-up</Link>
+				</>
+			)
+		} else {
+			return (
+				<button className="link" onClick={() => {f_logoff()}}>Sair</button>
+			)
+		}
+	}
     return (
     <>
 		<header>
-			<h1>DevCity</h1>
+			<div className="ctr-logo">
+				<h1 className="text-shadow">Bate</h1>
+				<h1 className="text-emphasis">Papo</h1>
+			</div>
 
 			<nav>
-				<Link to='/'>Home</Link>
-				<Link to='/adm'>Adm</Link>
+				{f_returnLinks()}
 			</nav>
 		</header>
 
 		<main>
 			<Routes>
-				<Route path="/" element={<Index/>}></Route>
-				<Route path="/adm" element={<Adm/>}></Route>
+				<Route path="/*" element={<Home/>}></Route>
+				<Route path="/signin" element={<SignIn/>}></Route>
+				<Route path="/signup" element={<SignUp/>}></Route>
 			</Routes>
 		</main>
     </>
