@@ -4,8 +4,9 @@ import Home from './components/Home'
 import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
 import { io } from 'socket.io-client'
-const socket = io("http://localhost:7070")
-const hostClient = 'http://localhost:3000'
+
+const socket = io(process.env.REACT_APP_HOST_SERVER)
+const hostClient = process.env.REACT_APP_HOST_CLIENT
 
 export default function App () {
 	const f_logoff = () => {

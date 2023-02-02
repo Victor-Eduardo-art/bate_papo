@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios'
 import imagePerfil from './assets/images/perfil.jpg'
 import iconOpen from './assets/icons/open.svg'
-const host = 'http://localhost:7070'
-const hostClient = 'http://localhost:3000'
+const host = process.env.REACT_APP_HOST_SERVER
+const hostClient = process.env.REACT_APP_HOST_CLIENT
 
 export default function Chats () {
     const [chats, setChats] = useState()

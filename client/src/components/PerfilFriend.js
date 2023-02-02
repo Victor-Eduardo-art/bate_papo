@@ -1,18 +1,20 @@
 import React, {useEffect, useState} from "react";
 import imagePerfil from './assets/images/perfil.jpg'
 import axios from "axios";
-const host = 'http://localhost:7070'
+const host = process.env.REACT_APP_HOST_SERVER
 
 export default function PerfilFriend () {
     const [chat, setChat] = useState()
 
     useEffect(() => {        
         axios.post(`${host}/getChat`, {
-            chatName: localStorage.getItem('chatName'),
+            // chatName: localStorage.getItem('chatName'),
+            chatName: 'teste',
             userName: localStorage.getItem('userName')
         }).then((res) => {
             setChat(res.data)
-            console.log(res.data)
+            console.log(res)
+            console.log(chat)
         }).catch((error) => console.log(error))
     }, [])
 
@@ -29,7 +31,7 @@ export default function PerfilFriend () {
     <div className="perfil">
         <img src={imagePerfil} className="picture-large" alt="foto de perfil do usuário"/>
         <p className="body-large">{localStorage.getItem('chatName')}</p>
-        <p>{chat.online}</p>
+        <p>online</p>
 
         <button 
             className="block"

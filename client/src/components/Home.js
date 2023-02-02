@@ -6,8 +6,8 @@ import PerfilFriend from './PerfilFriend'
 import Chats from "./Chats";
 import Chat from "./Chat";
 import { io } from 'socket.io-client'
-const host = 'http://localhost:7070'
-const socket = io("http://localhost:7070")
+const host = process.env.REACT_APP_HOST_SERVER
+const socket = io(process.env.REACT_APP_HOST_SERVER)
 
 socket.emit('online', true)
 socket.emit('getName', localStorage.getItem('userName'))
@@ -186,7 +186,7 @@ export default function Home () {
 
         <Routes>
             <Route path="/" element={[<Perfil key='perfil'/>, <Chats key='chats'/>]}></Route>
-            <Route path="/chat" element={[<Chat key='chat'/>]}></Route>
+            <Route path="/chat" element={[<PerfilFriend key='perfilFriend'/>, <Chat key='chat'/>]}></Route>
         </Routes>
     </div>
     )

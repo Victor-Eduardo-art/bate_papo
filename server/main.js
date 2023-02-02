@@ -1,4 +1,5 @@
 const express = require('express')
+const dotenv = require('dotenv').config() 
 const app = express()
 const cors = require('cors')
 const Db = require('./modules/Db')
@@ -9,7 +10,7 @@ const { Server } = require("socket.io");
 const io = new Server(server, {
     cors: {
         origin: [
-            "http://localhost:3000",
+            process.env.HOST_CLIENT,
         ]
     }
 });
@@ -211,9 +212,12 @@ io.on('connection', (socket) => {
         const chatName = req.body.chatName
         const userName = req.body.userName
 
+        console.log('oi')
+
         Db.User.findOne({where: {userName: userName}})
             .then((data) => {
                 if (data !== null) {
+                    console.log(data.userName)
                     for (let i = 0; i < data.myChats.length; i++) {
                         data.myChats[i].name === chatName && res.send(data.myChats[i])
                     }
@@ -335,4 +339,4 @@ io.on('connection', (socket) => {
         }).catch((error) => console.log(error))
     })
 
-server.listen(7070, () => console.log('server rodando em localhost:8080'))
+server.listen(process.env.PORT_SERVER, () => console.log(`server rodando em localhost:${process.env.PORT_SERVER}`))

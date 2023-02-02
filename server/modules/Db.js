@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize')
-const sequelize = new Sequelize('batepapo', 'ptf99ujn3kngs3idvjpc', 'pscale_pw_fW4q8CQUIJeFun6up5lD9levkq6IAUiYWk7MyONRW8M', {
-    host: 'us-east.connect.psdb.cloud',
+const dotEnd = require('dotenv')
+const sequelize = new Sequelize(process.env.NAME_DATABASE, process.env.USERNAME_DATABASE, process.env.PASSWORD_DATABASE, {
+    host: process.env.HOST_DATABASE,
     dialect: 'mysql',
     dialectOptions: {
         ssl: {
@@ -8,12 +9,6 @@ const sequelize = new Sequelize('batepapo', 'ptf99ujn3kngs3idvjpc', 'pscale_pw_f
         }
     }
 });
-
-// database: batepapo
-// username: 69wr0cy1vj0whstf6iy2
-// host: us-east.connect.psdb.cloud
-// password: pscale_pw_uh88UL7JHi4VZ95weuCbnEVucouGOelwkqCKMhgZxlZ
-
 
 const User = sequelize.define('users', {
     userName: Sequelize.DataTypes.STRING,

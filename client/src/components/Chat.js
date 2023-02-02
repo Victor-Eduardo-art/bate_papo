@@ -3,8 +3,7 @@ import iconOpen from './assets/icons/open.svg'
 import sendMessage from './assets/icons/iconSend.svg'
 import iconEmoji from './assets/icons/iconEmoji.svg'
 import axios from 'axios'
-const host = 'http://localhost:7070'
-
+const host = process.env.REACT_APP_HOST_SERVER
 
 export default function Chat () {
     const [chat, setChat] = useState()
@@ -16,6 +15,7 @@ export default function Chat () {
             userName: localStorage.getItem('userName')
         }).then((res) => {
             setChat(res.data)
+            console.log(res.data)
         }).catch((error) => console.log(error))
     }, [])
 
@@ -83,46 +83,46 @@ export default function Chat () {
     const getMessages = (chat) => {
         console.log(chat)
 
-        if (indice === 0) {
-            if (chatData.message.user === localStorage.getItem('userName')) {
-                return (
-                <>
-                    <div className="ctr-your-messages" key={`ctr-your-${chatData.message.date}`}>
-                        {typeof(chatData) !== 'undefined' && chatData.map((message) => {
-                            console.log(message)
-                            if (message.user === localStorage.getItem('userName')) {
-                                return (
-                                <div className="your-message" key={`your-message-${message.date + message.text}`}>
-                                    <p className="message body-small" key={`message-${message.date + message.text}`}>{message.text}</p>
-                                    <span className="date-message caption-small" key={`date-${message.date + message.text}`}>{message.date}</span>
-                                </div>
-                                )
-                            }
-                        })}
-                    </div>
+        // if (indice === 0) {
+        //     if (chatData.message.user === localStorage.getItem('userName')) {
+        //         return (
+        //         <>
+        //             <div className="ctr-your-messages" key={`ctr-your-${chatData.message.date}`}>
+        //                 {typeof(chatData) !== 'undefined' && chatData.map((message) => {
+        //                     console.log(message)
+        //                     if (message.user === localStorage.getItem('userName')) {
+        //                         return (
+        //                         <div className="your-message" key={`your-message-${message.date + message.text}`}>
+        //                             <p className="message body-small" key={`message-${message.date + message.text}`}>{message.text}</p>
+        //                             <span className="date-message caption-small" key={`date-${message.date + message.text}`}>{message.date}</span>
+        //                         </div>
+        //                         )
+        //                     }
+        //                 })}
+        //             </div>
 
-                    <div className="ctr-person-messages" key={`ctr-person-${chatData.message.date}`}>
-                        {typeof(chat) !== 'undefined' && chat.map((chatData) => {
-                            if (chatData.message.user !== localStorage.getItem('userName')) {
-                                return (
-                                <div className="person-message" key={`person-message-${chat.message.date + chat.message.text}`}>
-                                    <p className="message body-small" key={`message-${message.date + message.text}`}>{message.text}</p>
-                                    <span className="date-message caption-small" key={`date-${message.date + message.text}`}>{message.date}</span>
-                                </div>
-                                )
-                            }
-                        })}
-                    </div>
-                </>
-                )
-            } else {
-                return (
-                <>
+        //             <div className="ctr-person-messages" key={`ctr-person-${chatData.message.date}`}>
+        //                 {typeof(chat) !== 'undefined' && chat.map((chatData) => {
+        //                     if (chatData.message.user !== localStorage.getItem('userName')) {
+        //                         return (
+        //                         <div className="person-message" key={`person-message-${chat.message.date + chat.message.text}`}>
+        //                             <p className="message body-small" key={`message-${message.date + message.text}`}>{message.text}</p>
+        //                             <span className="date-message caption-small" key={`date-${message.date + message.text}`}>{message.date}</span>
+        //                         </div>
+        //                         )
+        //                     }
+        //                 })}
+        //             </div>
+        //         </>
+        //         )
+        //     } else {
+        //         return (
+        //         <>
 
-                </>
-                )
-            }
-        }
+        //         </>
+        //         )
+        //     }
+        // }
     }
 
     return (
