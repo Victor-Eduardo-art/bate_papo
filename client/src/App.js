@@ -3,9 +3,7 @@ import { Routes, Route, Link } from 'react-router-dom'
 import Home from './components/Home'
 import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
-import { io } from 'socket.io-client'
 
-const socket = io(process.env.REACT_APP_HOST_SERVER)
 const hostClient = process.env.REACT_APP_HOST_CLIENT
 
 export default function App () {

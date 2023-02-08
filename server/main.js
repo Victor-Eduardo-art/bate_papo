@@ -22,26 +22,39 @@ app.use(cors())
 
 io.on('connection', (socket) => {
     socket.on('online', (online) => {
+        let data = null
         socket.on('getName', (name) => {
-            // console.log(name)
-
             Db.User.findOne({where: {userName: name}})
                 .then((data) => {
                     data.online = true
+
                     data.save()
-                }).catch((error) => console.log(error))
+            }).catch((error) => console.log(error))
 
             socket.on('disconnect', () => {
                 console.log('saiu! mas saiu satisfeito');
-
+        
                 Db.User.findOne({where: {userName: name}})
                     .then((data) => {
                         data.online = false
                         data.save()
                     }).catch((error) => console.log(error))
             });
-        })
 
+            socket.on('sendMessage', (message) => {
+                data = message
+                console.log(data)
+                socket.broadcast.emit('getMessage', data)
+            })
+
+            socket.on('userBlocked', (data) => {
+                socket.broadcast.emit('getUserBlocked', data)
+            })
+
+            socket.on('addUser', (data) => {
+                socket.broadcast.emit('getNewsFriends', data)
+            })
+        })
     })
 })
 
@@ -64,7 +77,6 @@ io.on('connection', (socket) => {
             }],
             myChats: [{
                 name: `${datasUser.userName} (you)`,
-                online: false,
                 message: {
                     text: 'boas vindas',
                     date: date.toLocaleString(),
@@ -88,6 +100,7 @@ io.on('connection', (socket) => {
 
         const user = Db.User.findOne({where: {userName: userName, password: cripto.toCode(password)}})
             .then((data) => {
+                console.log(data.userName)
                 res.send(data)
             }).catch((error) => console.log(error))
 
@@ -111,7 +124,6 @@ io.on('connection', (socket) => {
                                 if (dataUser.friends[i].userName !== friendName) {
                                     friendsAmount++
                                 }
-
                             }
 
                             if (friendsAmount === dataUser.friends.length) {
@@ -122,7 +134,6 @@ io.on('connection', (socket) => {
 
                                 dataUser.myChats = [...dataUser.myChats, {
                                     name: friendName,
-                                    online: dataUser.online,
                                     message: {
                                         text: message,
                                         date: date.toLocaleString(),
@@ -161,7 +172,6 @@ io.on('connection', (socket) => {
                                 }]
                                 dataUser.myChats = [...dataUser.myChats, {
                                     name: userName,
-                                    online: dataUser.online,
                                     message: {
                                         text: message,
                                         date: date.toLocaleString(),
@@ -193,7 +203,8 @@ io.on('connection', (socket) => {
         Db.User.findOne({where: {userName: userName}})
             .then((dataUser) => {
                 let sendChats = []
-                dataUser.myChats[0].name = userName
+                dataUser.myChats[0].name = userName + ' (you)'
+                dataUser.friends[0].userName = userName + ' (you)'
 
                 if (dataUser !== null) {
                     for (let i = 0; i < dataUser.myChats.length; i++) {
@@ -212,12 +223,9 @@ io.on('connection', (socket) => {
         const chatName = req.body.chatName
         const userName = req.body.userName
 
-        console.log('oi')
-
         Db.User.findOne({where: {userName: userName}})
             .then((data) => {
                 if (data !== null) {
-                    console.log(data.userName)
                     for (let i = 0; i < data.myChats.length; i++) {
                         data.myChats[i].name === chatName && res.send(data.myChats[i])
                     }
@@ -227,7 +235,20 @@ io.on('connection', (socket) => {
             }).catch((error) => console.log(error))
     })
 
-    app.post('/senMessage', (req, res) => {
+    app.post('/getOnline', (req, res) => {
+        const chatName = req.body.chatName
+
+        Db.User.findOne({where: {userName: chatName}})
+            .then((data) => {
+                if (data !== null) {
+                    res.send(data.online)
+                } else {
+                    console.log('error, user not found')
+                }
+            }).catch((error) => console.log(error))
+    })
+
+    app.post('/sendMessage', (req, res) => {
         const chatName = req.body.chatName // chatName === friendName
         const userName = req.body.userName
         const message = req.body.message
@@ -258,7 +279,7 @@ io.on('connection', (socket) => {
                             }]
                             
                             data.save()
-                            res.send(data.myChats[i].message)
+                            res.send(data.myChats[i])
                         }
                     }
                 }

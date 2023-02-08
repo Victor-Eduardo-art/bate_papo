@@ -2,8 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios'
 import imagePerfil from './assets/images/perfil.jpg'
 import iconOpen from './assets/icons/open.svg'
+import { io } from 'socket.io-client'
+const socket = io(process.env.REACT_APP_HOST_SERVER)
 const host = process.env.REACT_APP_HOST_SERVER
 const hostClient = process.env.REACT_APP_HOST_CLIENT
+
+socket.emit('online', true)
+socket.emit('getName', localStorage.getItem('userName'))
 
 export default function Chats () {
     const [chats, setChats] = useState()
@@ -14,11 +19,59 @@ export default function Chats () {
                 userName: localStorage.getItem('userName')
             }).then((res) => {
                 setChats(res.data)
+
+                socket.on('getUserBlocked', (data) => {                    
+                    if (data.blockedUser === localStorage.getItem('userName')) {
+                        console.log('vc foi bloqueado')
+                        openModal(`o usuário ${data.user} lhe bloqueou, não seja babaca...`, true)
+                    }
+                })
+
+                socket.on('getNewsFriends', (data) => {
+                    console.log(data)
+                    if (data.userAdded === localStorage.getItem('userName'), true) {
+                        openModal(`o usuário ${data.user} lhe adicionou como amigo!`)
+                    }
+                })
             }).catch((error) => console.log(error))
         } else {
-            window.location.href = `${hostClient}/signup`
+            window.location.href = `${hostClient}/signin`
         }
     },[])
+
+    const openModal = (msg, reload) => {
+        const ctrModal = document.querySelector('.ctr-modal')
+
+        ctrModal.classList.remove('close')
+        document.querySelector('.modal p').innerHTML = msg
+
+        document.addEventListener('keydown', (key) => {
+            key = key.key
+            
+            if (key === 'Enter' || key === 'Escape') {
+                if (reload === true) {
+                    closeModal()
+                    window.location.reload()
+                } else {
+                    closeModal()
+                }
+            }
+        })
+
+        document.querySelector('.ctr-modal #buttonModalClose').addEventListener('click', () => {
+            if (reload === true) {
+                closeModal()
+                window.location.reload()
+            } else {
+                closeModal()
+            }
+        })
+    }
+
+    const closeModal = () => {
+        document.querySelector('.ctr-modal').classList.add('close')
+        document.querySelector('.ctr-modal button').focus()
+    }
 
     const openChat = (chatName, friendName) => {
         document.querySelector('main').classList.add('opacity-0')
@@ -55,14 +108,10 @@ export default function Chats () {
             
                     <div className="ctr-infoChat" key={`ctr_info_chat-${chat.name}`}>
                         <span key={`date_message-${chat.name}`} className="caption-small">
-                            {chat.online === true? 'online': 'offline'}
+                            {chat.message.date}
                         </span>
             
-                        <div key={`info_chat-${chat.name}`} className="infoChat">
-                            <div key={`ctr_message_count-${chat.name}`} className="ctr-messageCount">
-                                <span key={`message_count-${chat.name}`} className="messageCount caption-small">2</span>
-                            </div>
-            
+                        <div key={`info_chat-${chat.name}`} className="infoChat">               
                             <img key={`openChat-${chat.name}`} src={iconOpen} className="openChat" alt="abrir o chat" />
                         </div>
                     </div>

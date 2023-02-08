@@ -95,6 +95,8 @@ export default function SignIn () {
                     document.querySelector('.wrapper').classList.add('close')
                     document.querySelector('.blur').classList.add('none')
                     
+                    localStorage.setItem('userName', res.data.userName)
+
                     localStorage.removeItem('password')
                     window.location.href = `${hostClient}/`
                 })

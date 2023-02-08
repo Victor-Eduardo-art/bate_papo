@@ -1,7 +1,6 @@
 import React from "react";
 import imagePerfil from './assets/images/perfil.jpg'
 
-
 export default function Perfil () {
     return (
     <div className="perfil">

@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from 'axios'
-import { Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route} from 'react-router-dom'
 import Perfil from './Perfil'
 import PerfilFriend from './PerfilFriend'
 import Chats from "./Chats";
 import Chat from "./Chat";
 import { io } from 'socket.io-client'
-const host = process.env.REACT_APP_HOST_SERVER
 const socket = io(process.env.REACT_APP_HOST_SERVER)
-
-socket.emit('online', true)
-socket.emit('getName', localStorage.getItem('userName'))
+const host = process.env.REACT_APP_HOST_SERVER
 
 export default function Home () {
     const [form, setForm] = useState({
@@ -49,6 +46,41 @@ export default function Home () {
     }
 
     const closeModal = () => {
+        document.querySelector('.ctr-modal').classList.add('close')
+        document.querySelector('.ctr-modal button').focus()
+    }
+
+    const openPrompt = (msg, funcCancel, funcNext, reload) => {
+        const ctrPrompt = document.querySelector('.ctr-prompt')
+        const buttonCancel = document.querySelector('.ctr-prompt .buttonCancel')
+        const buttonNext = document.querySelector('.ctr-prompt .buttonNext')
+
+        ctrPrompt.classList.remove('close')
+        document.querySelector('.modal p').innerHTML = msg
+
+        document.addEventListener('keydown', (key) => {
+            key = key.key
+            
+            if (key === 'Escape') {
+                funcCancel()
+            }
+        })
+
+        buttonNext.addEventListener('click', () => {
+            if (reload === true) {
+                funcNext()
+                window.location.reload()
+            } else {
+                funcNext()
+            }
+        })
+
+        buttonCancel.addEventListener('click', () => {
+            funcCancel()
+        })
+    }
+
+    const closePrompt = () => {
         document.querySelector('.ctr-modal').classList.add('close')
         document.querySelector('.ctr-modal button').focus()
     }
@@ -106,17 +138,17 @@ export default function Home () {
                     document.querySelector('.wrapper').classList.add('close')
                     document.querySelector('.blur').classList.add('none')
 
-                    console.log(res.data)
-
-                    console.log(res.data)
-
                     if (res.data !== 'user not found' && 
                         res.data !== null && 
                         res.data !== 'user already added' &&
                         res.data !== 'this user is you') {
 
                         f_closeAddUser()
-                        openModal('Amigo adicionado com sucesso! acabamos de adicionar um novo chat', true)
+                        socket.emit('addUser', {
+                            user: localStorage.getItem('userName'),
+                            userAdded: form.userName
+                        })
+                        openModal('Amigo adicionado com sucesso! acabamos de adicionar um novo chat para você', true)
                     } else {
                         f_closeAddUser()
                         openModal(`${res.data}`)
@@ -137,11 +169,25 @@ export default function Home () {
             <div className="circle"></div>
         </div>
 
+        <div className="ctr-prompt close">
+            <div className="prompt">
+                <div className="ctr-notice">
+                    <h3 className="notice">Aviso:</h3>
+                    <p>Deseja bloquear este usuario?</p>
+                </div>
+
+                <div className="ctr-buttons">
+                    <button className="button-small buttonCancel" id="buttonCancel">Cancelar</button>
+                    <button className="button-small buttonNext" id="buttonNext">Avançar</button>
+                </div>
+            </div>
+        </div>
+
         <div className="ctr-modal close">
             <div className="modal">
                 <div className="ctr-notice">
                     <h3 className="notice">Aviso:</h3>
-                    <p></p>
+                    <p>localhostlocalhostlocalhostlocalhostlocalhostlocalhostlocalhostlocalhost</p>
                 </div>
 
                 <button className="close button-small" id="buttonModalClose">Fechar</button>
