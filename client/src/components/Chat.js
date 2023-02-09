@@ -23,7 +23,8 @@ export default function Chat () {
 
             socket.on('getMessage', (message) => {
                 if (typeof(message) !== 'undefined' && typeof(chat) !== 'undefined') {
-                    if (message.message_to === localStorage.getItem('userName')) {
+
+                    if (message.message_to === localStorage.getItem('userName') || message.message_from === localStorage.getItem('userName')) {
                         setChat({
                             message: {
                                 text: message.text, 
@@ -42,22 +43,20 @@ export default function Chat () {
             })
 
             socket.on('getUserBlocked', (data) => {
-                console.log(data)
-
+                console.log('teste block')                
                 if (data.blockedUser === localStorage.getItem('userName')) {
                     console.log('vc foi bloqueado')
-                    f_disableChat()
+                    openModal(`o usuário ${data.user} lhe bloqueou, não seja babaca...`, true)
                 }
             })
-
+    
             socket.on('getNewsFriends', (data) => {
                 console.log(data)
-                
-                if (data.userAdded === localStorage.getItem('userName'), () => {console.log('novo amigo!')}) {
-                    openModal(`o usuário ${data.user} lhe adicionou como amigo!`)
+                if (data.userAdded === localStorage.getItem('userName')) {
+                    console.log('voce foi adicionado como amigo')
+                    openModal(`o usuário ${data.user} lhe adicionou como amigo!`, true)
                 }
             })
-
         }).catch((error) => console.log(error))
     }, [])
 

@@ -22,7 +22,6 @@ app.use(cors())
 
 io.on('connection', (socket) => {
     socket.on('online', (online) => {
-        let data = null
         socket.on('getName', (name) => {
             Db.User.findOne({where: {userName: name}})
                 .then((data) => {
@@ -41,18 +40,19 @@ io.on('connection', (socket) => {
                     }).catch((error) => console.log(error))
             });
 
-            socket.on('sendMessage', (message) => {
-                data = message
-                console.log(data)
-                socket.broadcast.emit('getMessage', data)
-            })
-
             socket.on('userBlocked', (data) => {
+                console.log(`user blocked: ${data}`)
                 socket.broadcast.emit('getUserBlocked', data)
             })
 
             socket.on('addUser', (data) => {
+                console.log(`new friend: ${data}`)
                 socket.broadcast.emit('getNewsFriends', data)
+            })
+
+            socket.on('sendMessage', (message) => {
+                console.log(message)
+                socket.broadcast.emit('getMessage', message)
             })
         })
     })

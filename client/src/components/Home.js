@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from 'axios'
 import { Routes, Route} from 'react-router-dom'
 import Perfil from './Perfil'
@@ -8,6 +8,9 @@ import Chat from "./Chat";
 import { io } from 'socket.io-client'
 const socket = io(process.env.REACT_APP_HOST_SERVER)
 const host = process.env.REACT_APP_HOST_SERVER
+
+socket.emit('online', true)
+socket.emit('getName', localStorage.getItem('userName'))
 
 export default function Home () {
     const [form, setForm] = useState({
@@ -46,41 +49,6 @@ export default function Home () {
     }
 
     const closeModal = () => {
-        document.querySelector('.ctr-modal').classList.add('close')
-        document.querySelector('.ctr-modal button').focus()
-    }
-
-    const openPrompt = (msg, funcCancel, funcNext, reload) => {
-        const ctrPrompt = document.querySelector('.ctr-prompt')
-        const buttonCancel = document.querySelector('.ctr-prompt .buttonCancel')
-        const buttonNext = document.querySelector('.ctr-prompt .buttonNext')
-
-        ctrPrompt.classList.remove('close')
-        document.querySelector('.modal p').innerHTML = msg
-
-        document.addEventListener('keydown', (key) => {
-            key = key.key
-            
-            if (key === 'Escape') {
-                funcCancel()
-            }
-        })
-
-        buttonNext.addEventListener('click', () => {
-            if (reload === true) {
-                funcNext()
-                window.location.reload()
-            } else {
-                funcNext()
-            }
-        })
-
-        buttonCancel.addEventListener('click', () => {
-            funcCancel()
-        })
-    }
-
-    const closePrompt = () => {
         document.querySelector('.ctr-modal').classList.add('close')
         document.querySelector('.ctr-modal button').focus()
     }
@@ -143,11 +111,11 @@ export default function Home () {
                         res.data !== 'user already added' &&
                         res.data !== 'this user is you') {
 
-                        f_closeAddUser()
                         socket.emit('addUser', {
                             user: localStorage.getItem('userName'),
                             userAdded: form.userName
                         })
+                        f_closeAddUser()
                         openModal('Amigo adicionado com sucesso! acabamos de adicionar um novo chat para você', true)
                     } else {
                         f_closeAddUser()

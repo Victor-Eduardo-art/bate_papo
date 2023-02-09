@@ -5,6 +5,9 @@ import { io } from 'socket.io-client'
 const socket = io(process.env.REACT_APP_HOST_SERVER)
 const host = process.env.REACT_APP_HOST_SERVER
 
+socket.emit('online', true)
+socket.emit('getName', localStorage.getItem('userName'))
+
 export default function PerfilFriend () {
     const [chat, setChat] = useState()
     const [online, setOnline] = useState()
@@ -34,41 +37,20 @@ export default function PerfilFriend () {
                 user: localStorage.getItem('userName')
             })
             f_disableChat()
-            console.log(res.data)
         }).catch((error) => console.log(error))
+    }
+
+    const f_goHome = () => {
+        window.location.href = '/'
     }
 
     const f_disableChat = () => {
         document.querySelector('.home .blur').classList.remove('none')
 
         setTimeout(() => {
-            openModal('você bloqueou este usuário...')
-        }, 2000);
+            f_goHome()
+        }, 1000);
 
-    }
-
-    const openModal = (msg) => {
-        const ctrModal = document.querySelector('.ctr-modal')
-
-        ctrModal.classList.remove('close')
-        document.querySelector('.modal p').innerHTML = msg
-
-        document.addEventListener('keydown', (key) => {
-            key = key.key
-            
-            if (key === 'Enter' || key === 'Escape') {
-                closeModal()
-            }
-        })
-
-        document.querySelector('.ctr-modal #buttonModalClose').addEventListener('click', () => {
-            closeModal()
-        })
-    }
-
-    const closeModal = () => {
-        document.querySelector('.ctr-modal').classList.add('close')
-        document.querySelector('.ctr-modal button').focus()
     }
 
     const openPrompt = (msg, funcCancel, funcNext, reload) => {
@@ -79,8 +61,6 @@ export default function PerfilFriend () {
         ctrPrompt.classList.remove('close')
         document.querySelector('.modal p').innerHTML = msg
 
-        console.log(funcCancel)
-        console.log(funcNext)
         document.addEventListener('keydown', (key) => {
             key = key.key
             
@@ -118,7 +98,7 @@ export default function PerfilFriend () {
     
                 <button 
                     className="block"
-                    onClick={() => {openPrompt('Deseja bloquear este usuário?', closePrompt, blockUser, true)}}
+                    onClick={() => {openPrompt('Deseja bloquear este usuário?', closePrompt, blockUser, false)}}
                 >Bloquear usuário</button>
             </div>
             )

@@ -19,21 +19,23 @@ export default function Chats () {
                 userName: localStorage.getItem('userName')
             }).then((res) => {
                 setChats(res.data)
-
-                socket.on('getUserBlocked', (data) => {                    
-                    if (data.blockedUser === localStorage.getItem('userName')) {
-                        console.log('vc foi bloqueado')
-                        openModal(`o usuário ${data.user} lhe bloqueou, não seja babaca...`, true)
-                    }
-                })
-
-                socket.on('getNewsFriends', (data) => {
-                    console.log(data)
-                    if (data.userAdded === localStorage.getItem('userName'), true) {
-                        openModal(`o usuário ${data.user} lhe adicionou como amigo!`)
-                    }
-                })
             }).catch((error) => console.log(error))
+
+            socket.on('getUserBlocked', (data) => {
+                console.log('teste block')                
+                if (data.blockedUser === localStorage.getItem('userName')) {
+                    console.log('vc foi bloqueado')
+                    openModal(`o usuário ${data.user} lhe bloqueou, não seja babaca...`, true)
+                }
+            })
+    
+            socket.on('getNewsFriends', (data) => {
+                console.log(data)
+                if (data.userAdded === localStorage.getItem('userName')) {
+                    console.log('voce foi adicionado como amigo')
+                    openModal(`o usuário ${data.user} lhe adicionou como amigo!`, true)
+                }
+            })
         } else {
             window.location.href = `${hostClient}/signin`
         }
